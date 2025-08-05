@@ -1,112 +1,163 @@
- 👋 Challenge introduction.
-===
+= Lab Guide: Automating Day-2 Cloud Operations
+:toc:
+:toc-title: Table of Contents
+:sectnums:
+:icons: font
+
+An overview of day-2 cloud operations and how to automate common use cases on cloud operations topics.
+
+*Estimated time to complete: 15 minutes*
+
+---
+
+== Lab Overview
+
+Welcome to the `Ansible Hybrid Cloud Automation - Cloud Operations lab`. In this guide, you will learn how to automate Day-2 cloud operations. This first challenge focuses on understanding a pre-configured Dynamic Inventory and using tags to manage resources.
+
+First, log in to the Ansible Automation Platform UI with the following credentials.
+
+.Login Credentials
+[cols="1,2a"]
+|===
+| Username | `admin`
+| Password | `ansible123!`
+|===
+
+---
+
+== Task 1: Understanding Credentials
+
+Credentials are used for authentication when launching Jobs against machines, synchronizing with inventory sources, and importing project content from version control systems. In this lab, we use two pre-configured credentials:
+
+* **RHEL on AWS - SSH KEY:** An SSH key for connecting to the Red Hat Enterprise Linux hosts running on AWS.
+* **AWS_Credential:** An AWS credential for performing actions on the AWS cloud, such as creating a VPC or managing instances.
+
+. **Navigate to the Credentials menu.**
 +
-==== Estimated time to complete: _15 minutes_<p>
-* Welcome to the `Ansible Hybrid Cloud Automation - Cloud Operations lab`.
-In the following challenges and tasks we will guide you in understanding day-2 cloud operations and how to automate some common use cases on cloud operations topics.
-* In this first challenge, you will learn about the already configured Dynamic Inventory for this lab.
-You will see this inventory, and learn more about the inventory through tags in place on the inventory resources.
+In the Controller UI, go to the left navigation menu and select *Infrastructure* → *Credentials*.
++
+NOTE: Credential keys are encrypted. Once entered into the automation controller, no one, including administrators, can view the sensitive values.
 
-= ☑️ Task 1 - Understanding credentials.
+---
 
-Log in to the `Ansible Automation Platform`.
+== Task 2: AWS Inventory
 
-* Click on the `Automation Controller` tab at the top of lab.
-You will notice a number of tabs in the labs toolbar
+In this task, you will create a new inventory to hold your dynamically discovered hosts from AWS.
 
-Log in using the following credentials: + _Login credentials:_<p> `User:  admin` <p> `Password:  ansible123!` <p> --
+. **Navigate to the Inventories menu.**
++
+From the left navigation menu, select *Infrastructure* → *Inventories*. Notice that there is an inventory that we've created for you called `AWS Inventory`.
 
-Credentials are utilized for authentication when launching Jobs against machines, synchronizing with inventory sources, and importing project content from a version control system.
-In this lab, we have two different credentials:
-
-* `RHEL on AWS - SSH KEY` - This is an SSH key for the two Red Hat Enterprise Linux hosts running on AWS
-* `AWS_Credential` - This is the AWS credential for performing actions on AWS cloud.
-For example, creating a VPC, or other AWS resources, or shutting down an instance, or installing and configuring an OS or configuring other AWS services.
-Pretty much anything you need to perform in AWS.
-
-Click on the `Automtion Controller` tab at the top of lab.
-Click on the `Credentials` link under the `Automation Execution` \-> `Infrastructure` \->`` Credentials`` on the left navigation menu.
-Examine the two pre-configured credentials noted above
-
-`Note` The keys are encrypted so no one, not even an administrator, can see the key once it has been placed in automation controller.
-
-= ☑️ Task 2 - AWS Inventory.
-
-Click on the `Automation Controller` tab at the top of lab.
-Click on the `Inventories` link under the `Automation Execution` \-> `Infrastructure` \->`` Inventories`` on the left navigation menu.
-Notice that there is an inventory that we've created for you called `AWS Inventory`.
-
+. **Initiate inventory creation.**
++
 Click on this inventory, and then select the `Sources` tab.
+
+. **Enter the inventory details.**
++
 Select the `AWS Source` and click on the `Launch inventory update` button.
-This will synchronize/update the AWS hosts list.
 
-Wait for the Status to show `Success`, then click on the `Hosts` tab to view the EC2 instances.
-You may need to click on the `Back to Inventory Sources` to see the `Hosts` tab.
-Here you will see the list of pre-deployed instances.
+. **Wait for the Status to show `Success`, then click on the `Hosts` tab to view the EC2 instances.**
++
+You may need to click on the `Back to Inventory Sources` to see the `Hosts` tab. Here you will see the list of pre-deployed instances.
+---
 
-= ☑️ Task 3 - Create a job template to retrieve information about the EC2 Instances, and display the results to the screen.
+== Task 3: Create a job template to retrieve information about the EC2 Instances, and display the results to the screen.
 
-Click on the `Automation Controller` tab at the top of lab.
+. **Navigate to the Templates page.**
++
+From the left navigation menu, select *Templates*.
 
-Click on the `Templates` link under the `Automation Execution` on the left navigation menu.
+. **Initiate the creation of a new job template.**
++
+Click the **Create template** button, then select **Create job template**.
++
+image::https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[Create a new job template, 600, opts="border"]
 
-* Now click on `+ Create Template` then scroll down and click  `Create job template` image:https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[,600]
+. **Enter the job template details.**
++
+Fill out the form with the following information:
++
+[cols="1,1"]
+|===
+| Parameter | Value
+| Name | `Retrieve EC2 information`
+| Inventory | `AWS Inventory`
+| Project | `AWS Demo Project`
+| Playbook | `playbooks/lab2-ec2-info.yml`
+| Credentials | `AWS_Credential`
+|===
++
+TIP: For the `Credentials` you will have to select `Amazon Web Services` from the `Select Category` dropdown; then the `AWS_credential` will show up in the list to select.
 
-Fill out the following fields:+++<table>++++++<tr>++++++<th>+++Parameter+++</th>++++++<th>+++Value+++</th>++++++</tr>+++
-+++<tr>++++++<td>+++Name+++</td>++++++<td>+++Retrieve EC2 information+++</td>+++
-+++<tr>++++++<td>+++Inventory+++</td>++++++<td>+++AWS Inventory+++</td>+++
-+++<tr>++++++<td>+++Project+++</td>++++++<td>+++AWS Demo Project+++</td>+++
-+++<tr>++++++<td>+++Playbook+++</td>++++++<td>+++playbooks/lab2-ec2-info.yml+++</td>+++
-+++<tr>++++++<td>+++Credentials+++</td>++++++<td>+++AWS_Credential+++</td>+++
-</table>
-
-For the `Credentials` you will have to select `Amazon Web Services` from the `Select Category` dropdown; then the `AWS_credential` will show up in the list to select.
-
+. **Save the job template.**
++
 Scroll to the bottom Click the blue `Create Job Template` button to **save** the job template.
 
-Launch the `Retrieve EC2 information` job template, by selecting it and clicking on `Launch`, or by simply clicking the `Rocket Launcher` 🚀 icon.
+. **Launch the `Retrieve EC2 information` job template.**
++
+Select it and clicking on `Launch`, or by simply clicking the `Rocket Launcher` 🚀 icon.
 
-`Observe the output of the Job Template run.`
+. **Observe the output of the Job Template run.**
++
+In a highly dynamic environment, the AWS Inventory (EC2 instances) can change very often.  So it's important to trigger an Inventory synchronization before we run the job template. Let's address this in the next task.
+---
 
-In a highly dynamic environment, the AWS Inventory (EC2 instances) can change very often.  So it's important to trigger an Inventory synchronization before we run the job template.  `Let's address this in Task 4.`
+== Task 4: Create a Workflow Template to trigger an inventory synchronization, and run the job template.
 
-☑️ Task 4 - Create a Workflow Template to trigger an inventory synchronization, and run the job template.
-===
+. **Navigate to the Templates page.**
++
+From the left navigation menu, select *Templates*.
 
-Click on the `Automation Controller` tab at the top of lab.
+. **Initiate the creation of a new workflow job template.**
++
+Click the **Create template** button, then select **Create workflow job template**.
++
+image::https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[Create a new workflow job template, 600, opts="border"]
 
-Click on the `Templates` link under the `Automation Execution` on the left navigation menu.
+. **Enter the job template details.**
++
+Fill out the form with the following information:
++
+[cols="1,1"]
+|===
+| Parameter | Value
+| Name | `WORKFLOW - Retrieve EC2 information`
+| Inventory | `AWS Inventory`
+|===
 
-- Now click on `+ Create Template` then scroll down and click  `Create workflow job template`
-+++<img src="https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true" style="width:600px;margin-left:0px">++++++</img>+++
-
-Fill out the following fields:
-
-+++<table>++++++<tr>++++++<th>+++Parameter+++</th>++++++<th>+++Value+++</th>++++++</tr>+++
-+++<tr>++++++<td>+++Name+++</td>++++++<td>+++WORKFLOW - Retrieve EC2 information+++</td>+++
-+++<tr>++++++<td>+++Inventory+++</td>++++++<td>+++AWS Inventory+++</td>+++
-</table>
-
+. **Save the workflow job template.**
++
 Scroll to the bottom and click `Create workflow job template`.
 
-The Workflow visual designer will open.  Click on the  `Add step` button.
-In the `+ Add step` dialog, expand the `Node Type` dropdown and select `Inventory Source Sync`, then from the `Inventory source` dropdown select the `AWS Source` and now click on `Next` below, and then `Finish` to save this step.
+. **The Workflow visual designer will open.**
++
+Click on the `Add step` button.
 
-At this point you have the first node in the workflow that will trigger the AWS Inventory synchronization.  On the node titled `AWS Source` select the `ellipsis (3 vertical dots)` and select the `+ Add step and link` to add another node to the workflow.
+. **In the `+ Add step` dialog, expand the `Node Type` dropdown and select `Inventory Source Sync`**
++
+From the `Inventory source` dropdown select the `AWS Source` and now click on `Next` below, and then `Finish` to save this step.
 
-At this point the `Node Type` should be `Job Template`.  From the `Job template` dropdown, select the `Retrieve EC2 information` job template from the list.
+. **At this point you have the first node in the workflow that will trigger the AWS Inventory synchronization.**
++
+On the node titled `AWS Source` select the `ellipsis (3 vertical dots)` and select the `+ Add step and link` to add another node to the workflow.
 
-From the `Status` dropdown make sure `Run on success` is selected.  This will make sure that we don't proceed to this step until the fist node in the workflow is completes successfully.  Select `Next` below, and then `Finish` to save this step.
+. **At this point the `Node Type` should be `Job Template`.**
++
+From the `Job template` dropdown, select the `Retrieve EC2 information` job template from the list.
 
-In the top left corner of the Workflow designer click on `Save` to save the Workflow Template.
+. **From the `Status` dropdown make sure `Run on success` is selected.**
++
+This will make sure that we don't proceed to this step until the fist node in the workflow is completes successfully. Select `Next` below, and then `Finish` to save this step.
 
-Back in the `Templates` link under the `Automation Execution` on the left navigation menu. `Launch` the workflow template `WORKFLOW - Retrieve EC2 information`.  To see the job details you can select each workflow node, and go to the `Output` tab to see the details of that node execution.
+. **In the top left corner of the Workflow designer click on `Save` to save the Workflow Template.**
++
+Back in the `Templates` link under the `Automation Execution` on the left navigation menu. Launch the workflow template `WORKFLOW - Retrieve EC2 information`. To see the job details you can select each workflow node, and go to the `Output` tab to see the details of that node execution.
 
-In summary, this `Workflow template` made sure we updated the AWS inventory to the most recent inventory, and then retrieved the EC2 information that we desired.
+. **In summary, this `Workflow template` made sure we updated the AWS inventory to the most recent inventory, and then retrieved the EC2 information that we desired.**
++
+When you are done, please move on to the next challenge. Click `Next`.
 
-When you are done, please `move on to the next challenge`. Click `Next`.
+---
+== Next Steps
 
-✅ Next Challenge.
-===
-
-Press the `Next` button below to go to the next challenge once you've completed this challenge.+++</tr>++++++</tr>++++++</table>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</table>+++
+Press the `Next` button below to go to the next challenge once you've completed this challenge.
