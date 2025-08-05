@@ -171,23 +171,23 @@ tee /tmp/aws_setup.yml << EOF
 
   tasks:
   
-    - name: Add SSH Controller credential to automation controller
-      ansible.controller.credential:
-        name: SSH Controller Credential
-        description: Creds to be able to SSH the contoller_host
-        organization: "Default"
-        state: present
-        credential_type: "Machine"
-        controller_username: "{{ username }}"
-        controller_password: "{{ admin_password }}"
-        controller_host: "https://{{ ansible_host }}"
-        validate_certs: false
-        inputs:
-          username: rhel
-          ssh_key_data: "{{ lookup('file','/home/rhel/.ssh/id_rsa') }}"
-      register: controller_try
-      retries: 10
-      until: controller_try is not failed
+    # - name: Add SSH Controller credential to automation controller
+    #   ansible.controller.credential:
+    #     name: SSH Controller Credential
+    #     description: Creds to be able to SSH the contoller_host
+    #     organization: "Default"
+    #     state: present
+    #     credential_type: "Machine"
+    #     controller_username: "{{ username }}"
+    #     controller_password: "{{ admin_password }}"
+    #     controller_host: "https://{{ ansible_host }}"
+    #     validate_certs: false
+    #     inputs:
+    #       username: rhel
+    #       ssh_key_data: "{{ lookup('file','/home/rhel/.ssh/id_rsa') }}"
+    #   register: controller_try
+    #   retries: 10
+    #   until: controller_try is not failed
 
     - name: Add AWS credential to automation controller
       ansible.controller.credential:
