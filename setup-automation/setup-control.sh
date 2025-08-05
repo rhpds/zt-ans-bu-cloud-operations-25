@@ -223,7 +223,7 @@ tee /tmp/aws_setup.yml << EOF
         organization: "Default"
         state: present
         scm_type: git
-        scm_url: https://github.com/HichamMourad/awsops25
+        scm_url: https://github.com/ansible-tmm/awsops25.git
         default_environment: "Default execution environment"
         controller_username: "{{ username }}"
         controller_password: "{{ admin_password }}"
