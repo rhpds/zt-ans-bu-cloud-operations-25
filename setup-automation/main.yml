@@ -15,16 +15,16 @@
       ansible_ssh_user: "{{ lookup('ansible.builtin.env', 'BASTION_USER') }}"
       ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'BASTION_PASSWORD') }}"
       ansible_become_password: "{{ lookup('ansible.builtin.env', 'BASTION_PASSWORD') }}"
-  - name: Add nodes
-    ansible.builtin.add_host:
-      name: "{{ item }}"
-      ansible_ssh_host: "{{ item }}"
-      ansible_ssh_port: "{{ lookup('ansible.builtin.env', 'BASTION_PORT') }}"
-      ansible_ssh_user: "{{ lookup('ansible.builtin.env', 'BASTION_USER') }}"
-      ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'BASTION_PASSWORD') }}"
-      ansible_python_interpreter: /usr/libexec/platform-python
-    loop:
-      - vscode
+  # - name: Add nodes
+  #   ansible.builtin.add_host:
+  #     name: "{{ item }}"
+  #     ansible_ssh_host: "{{ item }}"
+  #     ansible_ssh_port: "{{ lookup('ansible.builtin.env', 'BASTION_PORT') }}"
+  #     ansible_ssh_user: "{{ lookup('ansible.builtin.env', 'BASTION_USER') }}"
+  #     ansible_ssh_pass: "{{ lookup('ansible.builtin.env', 'BASTION_PASSWORD') }}"
+  #     ansible_python_interpreter: /usr/libexec/platform-python
+  #   loop:
+  #     - vscode
 - name: Demo Playbook for the ansible-runner API
   hosts: all:!localhost
   gather_facts: false
@@ -58,9 +58,6 @@
       src: "./setup-{{ ansible_host }}.sh"
       dest: "/tmp/setup-scripts/setup-{{ ansible_host }}.sh"
     register: r_result
-
-  - name: Include secrets var
-    include_vars: ../config/secrets.yaml
 
   - name: Execute setup-node.sh if it exists
     when: r_script_test.stat.exists
