@@ -148,17 +148,21 @@ echo "192.168.1.10 control.lab control" >> /etc/hosts
 dnf install -y python3-pip python3-libsemanage
 
 # Create a playbook for the user to execute
-tee /tmp/setup.yml << EOF
-### Automation Controller setup 
-###
----
-- name: Setup Controller
-  hosts: localhost
-  connection: local
-  collections:
-    - ansible.controller
 
+## install python3 libraries needed for the Cloud Report
+dnf install -y python3-pip python3-libsemanage
+
+# Create a playbook for the user to execute
+tee /tmp/aws_setup.yml << EOF
+---
+- name: Deploy credentials and AAP resources
+  hosts: localhost
+  gather_facts: false
+  become: true
   vars:
+    username: admin
+    admin_password: ansible123!
+    ansible_host: localhost
     aws_access_key: "{{ lookup('env', 'AWS_ACCESS_KEY_ID') | default('AWS_ACCESS_KEY_ID_NOT_FOUND', true) }}"
     aws_secret_key: "{{ lookup('env', 'AWS_SECRET_ACCESS_KEY') | default('AWS_SECRET_ACCESS_KEY_NOT_FOUND', true) }}"
     aws_default_region: "{{ lookup('env', 'AWS_DEFAULT_REGION') | default('AWS_DEFAULT_REGION_NOT_FOUND', true) }}"
@@ -166,122 +170,188 @@ tee /tmp/setup.yml << EOF
     quay_password: "{{ lookup('env', 'QUAY_PASSWORD') | default('QUAY_PASSWORD_NOT_FOUND', true) }}"
 
   tasks:
-    - name: Add AWS credential
+  
+    - name: Add SSH Controller credential to automation controller
       ansible.controller.credential:
-        name: 'AWS Credential'
-        organization: Default
-        credential_type: "Amazon Web Services"
-        controller_host: "https://localhost"
-        controller_username: admin
-        controller_password: ansible123!
-        validate_certs: false
-        inputs:
-          username: "{{ aws_access_key }}"
-          password: "{{ aws_secret_key }}"
-
-    # - name: Remove Demo Inventory
-    #   ansible.controller.inventory:
-    #     controller_host: "https://localhost"
-    #     controller_username: admin
-    #     controller_password: ansible123!
-    #     validate_certs: false
-    #     name: "Demo Inventory"
-    #     organization: Default
-    #     state: absent
-
-    # - name: Ensure inventory exists
-    #   ansible.controller.inventory:
-    #     controller_host: "https://localhost"
-    #     controller_username: admin
-    #     controller_password: ansible123!
-    #     validate_certs: false
-    #     name: "AWS Inventory example"
-    #     organization: Default
-    #     state: present
-    #   register: aws_inventory_result
-
-    # - name: Ensure AWS EC2 inventory source exists
-    #   ansible.controller.inventory_source:
-    #     controller_host: "https://localhost"
-    #     controller_username: admin
-    #     controller_password: ansible123!
-    #     validate_certs: false
-    #     name: "AWS EC2 Instances Source"
-    #     inventory: "AWS Inventory example"
-    #     source: ec2
-    #     credential: "AWS Credential"
-    #     source_vars:
-    #       regions: ["{{ aws_default_region }}"]
-    #     overwrite: true
-    #     overwrite_vars: true
-    #     update_on_launch: true
-    #     update_cache_timeout: 300
-    #     state: present
-    #   register: aws_inventory_source_result
-
-    - name: Add a Container Registry Credential to automation controller
-      ansible.controller.credential:
-        name: Quay Registry Credential
-        description: Creds to be able to access Quay
+        name: SSH Controller Credential
+        description: Creds to be able to SSH the contoller_host
         organization: "Default"
         state: present
-        credential_type: "Container Registry"
-        controller_username: admin
-        controller_password: ansible123!
-        controller_host: "https://localhost"
+        credential_type: "Machine"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
         validate_certs: false
         inputs:
-          username: "{{ quay_username }}"
-          password: "{{ quay_password }}"
-          host: "quay.io"
+          username: rhel
+          ssh_key_data: "{{ lookup('file','/home/rhel/.ssh/id_rsa') }}"
+      register: controller_try
+      retries: 10
+      until: controller_try is not failed
+
+    - name: Add AWS credential to automation controller
+      ansible.controller.credential:
+        name: AWS_Credential
+        description: Amazon Web Services
+        organization: "Default"
+        state: present
+        credential_type: "Amazon Web Services"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+        inputs:
+          username: "{{ lookup('env','INSTRUQT_AWS_ACCOUNT_AWSACCOUNT_AWS_ACCESS_KEY_ID') }}"
+          password: "{{ lookup('env','INSTRUQT_AWS_ACCOUNT_AWSACCOUNT_AWS_SECRET_ACCESS_KEY') }}"
       register: controller_try
       retries: 10
       until: controller_try is not failed
 
     - name: Add EE to the controller instance
       ansible.controller.execution_environment:
-        name: "Terraform Execution Environment"
-        image: quay.io/acme_corp/terraform_ee
-        credential: Quay Registry Credential
-        controller_username: admin
-        controller_password: ansible123!
-        controller_host: "https://localhost"
+        name: "AWS Execution Environment"
+        image: quay.io/acme_corp/aws_ee
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
         validate_certs: false
 
     - name: Add project
       ansible.controller.project:
-        name: "Terraform Demos Project"
+        name: "AWS Demos Project"
         description: "This is from github.com/ansible-cloud"
         organization: "Default"
         state: present
         scm_type: git
-        scm_url: http://gitea:3000/student/terraform-aap.git
-        default_environment: "Terraform Execution Environment"
-        controller_username: admin
-        controller_password: ansible123!
-        controller_host: "https://localhost"
+        scm_url: https://github.com/HichamMourad/awsops25
+        default_environment: "Default execution environment"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
         validate_certs: false
 
     - name: Delete native job template
       ansible.controller.job_template:
         name: "Demo Job Template"
         state: "absent"
-        controller_username: admin
-        controller_password: ansible123!
-        controller_host: "https://localhost"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
         validate_certs: false
 
-    - name: Add a TERRAFORM INVENTORY
+    - name: Create job template
+      ansible.controller.job_template:
+        name: "{{ item.name }}"
+        job_type: "run"
+        organization: "Default"
+        inventory: "Demo Inventory"
+        project: "AWS Demos Project"
+        playbook: "{{ item.playbook }}"
+        credentials:
+          - "AWS_Credential"
+        state: "present"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+        extra_vars:
+          controller_host: "{{ ansible_host }}"
+      with_items:
+        - { playbook: 'playbooks/aws_resources.yml', name: 'Create AWS Resources' }
+        - { playbook: 'playbooks/aws_instances.yml', name: 'Create AWS Instances' }
+
+    - name: Launch a job template
+      ansible.controller.job_launch:
+        job_template: "Create AWS Resources"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+      register: job
+
+    - name: Wait for job to finish
+      ansible.controller.job_wait:
+        job_id: "{{ job.id }}"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"        
+        validate_certs: false
+
+    - name: Launch a job template
+      ansible.controller.job_launch:
+        job_template: "Create AWS Instances"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+      register: job2
+
+    - name: Wait for job2 to finish
+      ansible.controller.job_wait:
+        job_id: "{{ job2.id }}"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"        
+        validate_certs: false
+
+    - name: Add an AWS INVENTORY
       ansible.controller.inventory:
-        name: "Terraform Inventory"
-        description: "Our Terraform Inventory"
+        name: "AWS Inventory"
+        description: "Our AWS Inventory"
         organization: "Default"
         state: present
-        controller_username: admin
-        controller_password: ansible123!
-        controller_host: "https://localhost"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
         validate_certs: false
-      
+
+    - name: Add an AWS InventorySource
+      ansible.controller.inventory_source:
+        name: "AWS Source"
+        description: "Source for the AWS Inventory"
+        inventory: "AWS Inventory"
+        credential: "AWS_Credential"
+        source: ec2
+        overwrite: "True"
+        update_on_launch: "True"
+        organization: "Default"
+        source_vars:
+          private: "false"
+          hostnames:
+            - 'tag:Name'
+          compose: 
+            ansible_host: public_ip_address
+        state: present
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+
+    - name: Update a single inventory source
+      ansible.controller.inventory_source_update:
+        name: "AWS Source"
+        inventory: "AWS Inventory"
+        organization: "Default"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+
+    - name: Add ansible-1 host
+      ansible.controller.host:
+        name: "ansible-1"
+        inventory: "Demo Inventory"
+        state: present
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+        variables:
+            note: in production these passwords would be encrypted in vault
+            ansible_user: rhel
+            ansible_password: ansible123!
+            ansible_host: controller
+
 EOF
 export ANSIBLE_LOCALHOST_WARNING=False
 export ANSIBLE_INVENTORY_UNPARSED_WARNING=False
