@@ -1,83 +1,129 @@
- 👋 Challenge introduction.
-===
+= Lab Guide: Automating OS Patching on AWS
+:toc:
+:toc-title: Table of Contents
+:sectnums:
+:icons: font
+
+This guide demonstrates how to create and run a job template to perform OS patching on EC2 instances.
+
+*Estimated time to complete: 15 minutes*
+
+---
+
+== Lab Overview
+
+Welcome to the lab on Cloud Operations. In this challenge, you will create a Job Template to automate the patching of Red Hat Enterprise Linux servers running on AWS. You will also generate and view a patching report.
+
+First, log in to the Ansible Automation Platform UI with the following credentials.
+
+.Login Credentials
+[cols="1,2a"]
+|===
+| Username | `admin`
+| Password | `ansible123!`
+|===
+
+---
+
+== Task 1: Create and Run the Patching Job Template
+
+In this task, you will configure and launch a job template that checks for available patches on a Linux host.
+
+. **Navigate to the Templates page.**
 +
-== Your assignment.
+From the left navigation menu, select *Templates*.
+
+. **Initiate the creation of a new job template.**
 +
-=== _Estimated time to complete: 15 minutes_<p>
-* Create a Job Template to perform OS patching of EC2 instances on AWS.
-In this example we will patch Red Hat Enterprise Linux servers.
-You will also generate a report and view it on one of the server instances.
+Click the **Create template** button, then select **Create job template**.
++
+image::https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[Create a new job template, 600, opts="border"]
 
-= ☑️ Task 1 - Create and run the Job Template to patch the Linux hosts.
+. **Enter the job template details.**
++
+Fill out the form with the following information:
++
+[cols="1,1"]
+|===
+| Parameter | Value
+| Name | `Linux Patching`
+| Job Type | `Check`
+| Inventory | `AWS Inventory`
+| Project | `AWS Demo Project`
+| Execution Environment | `Default execution environment`
+| Playbook | `playbooks/lab2-patching.yml`
+| Credentials | `RHEL on AWS - SSH KEY`
+|===
++
+TIP: To select the credential, you may need to first filter the *Credential Type* to `Machine`.
 
-Log in to the `Ansible Automation Controller`.
+. **Save the job template.**
++
+Scroll to the bottom and click the blue **Save** button.
 
-* Click on the `Automation Controller` tab at the top of lab.
-You will notice a number of tabs in the labs toolbar
+. **Navigate to the Survey tab.**
++
+At the top of the template's details page, click the **Survey** tab to add a user prompt.
 
-Log in using the following credentials: + _Login credentials:_<p> `User:  admin` <p> `Password:  ansible123!` <p>
+. **Create a new survey question.**
++
+Click the blue **Add** button.
 
-'''
+. **Configure the survey question.**
++
+Fill out the survey form with the following values:
++
+[cols="1,1"]
+|===
+| Parameter | Value
+| Question | `Enter the Linux Host you want to patch`
+| Answer variable name | `HOSTS`
+| Answer type | `Multiple Choice (single select)`
+| Required | Check the box ☑️
+| Multiple Choice Options | `rhel1`
+|===
 
-Click on the `Templates` link under the `Automation Execution` on the left navigation menu.
+. **Set the default answer and save.**
++
+Click the radio button next to `rhel1` to make it the default option, then click **Save**.
 
-* Now click on `+ Create Template` then scroll down and click  `Create job template` image:https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[,600]
+. **Enable the survey.**
++
+You must **enable the survey** by clicking the toggle switch at the top of the survey page. The text will change from `SURVEY OFF` to `SURVEY ON`.
++
+image::https://github.com/HichamMourad/awsops25/blob/master/images/survey_toggle_short.png?raw=true[Enable Survey Toggle, 600, opts="border"]
 
-Fill out the following fields:+++<table>++++++<tr>++++++<th>+++Parameter+++</th>++++++<th>+++Value+++</th>++++++</tr>+++
-+++<tr>++++++<td>+++Name+++</td>++++++<td>+++Linux Patching+++</td>+++
-+++<tr>++++++<td>+++Job Type+++</td>++++++<td>+++Check+++</td>+++
-+++<tr>++++++<td>+++Inventory+++</td>++++++<td>+++AWS Inventory+++</td>+++
-+++<tr>++++++<td>+++Project+++</td>++++++<td>+++AWS Demo Project+++</td>+++
-+++<tr>++++++<td>+++Execution Environment+++</td>++++++<td>+++Default execution environment+++</td>+++
-+++<tr>++++++<td>+++Playbook+++</td>++++++<td>+++playbooks/lab2-patching.yml+++</td>+++
-+++<tr>++++++<td>+++Credentials+++</td>++++++<td>+++RHEL on AWS - SSH KEY+++</td>+++
-</table>
+. **Launch the template.**
++
+Click the **Launch** button in the top right.
 
-For the `Credentials` you will have to select `Machine` from the `Select Category` dropdown; then the `RHEL on AWS - SSH KEY` will show up in the list to select.
+. **Complete the survey and run the job.**
++
+You will be prompted with the survey question. Since `rhel1` is already the default, click **Next**, review the details, and then click **Finish** to run the job.
 
-Scroll to the bottom Click the blue `Create Job Template` button to **save** the job template.
+NOTE: We set the *Job Type* to `Check`. This runs the playbook in "dry run" mode, showing what changes would be made without actually applying them. The job output will point to the patch reports, which we will examine in the next task.
 
-Click on the `Survey` menu option to create a Survey for this job template.
-Now click the blue `+ Create survey question` button.
-Fill out the following fields on the Survey form:
+---
 
-+++<table>++++++<tr>++++++<th>+++Parameter+++</th>++++++<th>+++Value+++</th>++++++</tr>+++
-+++<tr>++++++<td>+++Question+++</td>++++++<td>+++Enter the Linux Host you want to patch+++</td>+++
-+++<tr>++++++<td>+++Answer variable name+++</td>++++++<td>+++HOSTS+++</td>+++
-+++<tr>++++++<td>+++Answer type+++</td>++++++<td>+++Multiple Choice (single select)+++</td>+++
-+++<tr>++++++<td>+++Required+++</td>++++++<td>+++☑️+++</td>+++
-+++<tr>++++++<td>+++Multiple Choice Options+++</td>++++++<td>+++rhel1+++</td>+++
-</table>
+== Task 2: View the Patching Report
 
-Click the `Default option` radio button next to `rhel1`
+The automation job generates HTML reports detailing the available patches.
 
-Scroll to the bottom and click ` Create survey question`.
+. **Locate the report URLs in the job output.**
++
+The output from the `Linux Patching` job will contain URLs for the generated reports. They will look similar to this:
++
+* `http://<IP_ADDRESS>/reports/linux.html`
+* `http://<IP_ADDRESS>/reports/linuxpatch.html`
 
-Enable the Survey by turning on the `Survey Disabled` dial.  Once you do this the text will change to `Survey Enabled`.
-+++<img src="https://github.com/HichamMourad/awsops25/blob/master/images/survey_toggle_short.png?raw=true" style="width:600px;margin-left:0px">++++++</img>+++
+. **View the reports.**
++
+Copy and paste each URL into a new browser tab to view them. The `linuxpatch.html` report provides a detailed list of all package updates that would be installed or removed if the job were run in normal mode.
 
-Click the `Launch template` button in the top right to launch the job again.
+NOTE: While this challenge focuses on Linux, Ansible Automation Platform can be used to perform Windows patching with similar workflows.
 
-You will be prompted to respond to the survey question.  `rhel1` is already the default value, click `Next` to review the jot template details, and click `Finish`.
+---
 
-Observe the output of the Job Template run.  Recall that we had set the job type to `Check` as `Run` would have taken some additional time.  As you can see the job output points to the Linux Patching reports. More on this in the next task!
+== Next Steps
 
-
-☑️ Task 2 - View the report output from the Patch automation job.
-===
-
-The output from the `Linux Patch` job will provide some URLs to the patch reports.
-
-The URLs will look like the following: `http://+++<ip-address>+++/reports/linux.html` and `http://+++<ip-addres>+++/reports/linuxpatch.html`
-
-- Copy and paste each of these URLs to a new browser window to view them.  Notice that in the `linuxpatch.html` report you will see a list of all the patch updates that would be installed, and what would be removed.
-
-Please note that in this challenge we performed Linux patching, but you can also perform Windows patching using Ansible Automation Platform.
-
-When you are done, please `move on to the next challenge`. Click `Next`.
-
-
-✅ Next Challenge.
-===
-
-Press the `Next` button below to go to the next challenge once you've completed this challenge.+++</ip-addres>++++++</ip-address>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</table>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</tr>++++++</table>+++
+You have successfully completed this lab. Press the `Next` button in the lab environment to proceed to the next challenge.
