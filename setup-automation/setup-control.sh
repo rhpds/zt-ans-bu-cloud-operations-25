@@ -7,6 +7,32 @@ nmcli connection add type ethernet con-name enp2s0 ifname enp2s0 ipv4.addresses 
 nmcli connection up enp2s0
 echo "192.168.1.10 control.lab control" >> /etc/hosts
 
+
+echo "%rhel ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/rhel_sudoers
+chmod 440 /etc/sudoers.d/rhel_sudoers
+echo "Checking SSH keys for rhel user..."
+
+RHEL_SSH_DIR="/home/rhel/.ssh"
+RHEL_PRIVATE_KEY="$RHEL_SSH_DIR/id_rsa"
+RHEL_PUBLIC_KEY="$RHEL_SSH_DIR/id_rsa.pub"
+
+if [ -f "$RHEL_PRIVATE_KEY" ]; then
+    echo "SSH key already exists for rhel user: $RHEL_PRIVATE_KEY"
+else
+    echo "Creating SSH key for rhel user..."
+    sudo -u rhel mkdir -p /home/rhel/.ssh
+    sudo -u rhel chmod 700 /home/rhel/.ssh
+    sudo -u rhel ssh-keygen -t rsa -b 4096 -C "rhel@$(hostname)" -f /home/rhel/.ssh/id_rsa -N "" -q
+    sudo -u rhel chmod 600 /home/rhel/.ssh/id_rsa*
+    
+    if [ -f "$RHEL_PRIVATE_KEY" ]; then
+        echo "SSH key created successfully for rhel user"
+    else
+        echo "Error: Failed to create SSH key for rhel user"
+    fi
+fi
+
+
 # # Setup rhel user
 # cp -a /root/.ssh/* /home/rhel/.ssh/.
 # chown -R rhel:rhel /home/rhel/.ssh
@@ -171,23 +197,23 @@ tee /tmp/aws_setup.yml << EOF
 
   tasks:
   
-    # - name: Add SSH Controller credential to automation controller
-    #   ansible.controller.credential:
-    #     name: SSH Controller Credential
-    #     description: Creds to be able to SSH the contoller_host
-    #     organization: "Default"
-    #     state: present
-    #     credential_type: "Machine"
-    #     controller_username: "{{ username }}"
-    #     controller_password: "{{ admin_password }}"
-    #     controller_host: "https://{{ ansible_host }}"
-    #     validate_certs: false
-    #     inputs:
-    #       username: rhel
-    #       ssh_key_data: "{{ lookup('file','/home/rhel/.ssh/id_rsa') }}"
-    #   register: controller_try
-    #   retries: 10
-    #   until: controller_try is not failed
+    - name: Add SSH Controller credential to automation controller
+      ansible.controller.credential:
+        name: SSH Controller Credential
+        description: Creds to be able to SSH the contoller_host
+        organization: "Default"
+        state: present
+        credential_type: "Machine"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+        inputs:
+          username: rhel
+          ssh_key_data: "{{ lookup('file','/home/rhel/.ssh/id_rsa') }}"
+      register: controller_try
+      retries: 10
+      until: controller_try is not failed
 
     - name: Add AWS credential to automation controller
       ansible.controller.credential:
