@@ -227,8 +227,8 @@ tee /tmp/aws_setup.yml << EOF
         controller_host: "https://{{ ansible_host }}"
         validate_certs: false
         inputs:
-          username: "{{ lookup('env','INSTRUQT_AWS_ACCOUNT_AWSACCOUNT_AWS_ACCESS_KEY_ID') }}"
-          password: "{{ lookup('env','INSTRUQT_AWS_ACCOUNT_AWSACCOUNT_AWS_SECRET_ACCESS_KEY') }}"
+          username: "{{ aws_access_key }}"
+          password: "{{ aws_secret_key }}"
       register: controller_try
       retries: 10
       until: controller_try is not failed
