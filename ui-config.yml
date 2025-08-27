@@ -22,11 +22,11 @@ tabs:
     url: https://control-${guid}.${domain}/
   # - name: gitea
   #   url: https://gitea-${guid}.${domain}/
-  - name: VS Code
-    url: https://vscode-${guid}.${domain}
-    external: false
-  - name: "TERMINAL"
-    url: /wetty_vscode
+  # - name: VS Code
+  #   url: https://vscode-${guid}.${domain}
+  #   external: false
+  # - name: "TERMINAL"
+  #   url: /wetty_vscode
   - name: Cloud (AWS)
     url: /cloud
     external: true
