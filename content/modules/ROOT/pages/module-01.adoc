@@ -1,7 +1,6 @@
 = Lab Guide: Automating Day-2 Cloud Operations
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 An overview of day-2 cloud operations and how to automate common use cases on cloud operations topics.
