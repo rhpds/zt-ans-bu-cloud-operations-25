@@ -1,7 +1,6 @@
 = Lab Guide: Automating Day-2 Cloud Operations with AWS
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 _A guide to using Ansible Automation Platform for Day-2 cloud operations, including dynamic inventories, job templates, and workflows._
