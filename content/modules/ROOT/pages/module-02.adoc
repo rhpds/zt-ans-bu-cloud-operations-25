@@ -1,7 +1,6 @@
 = Lab Guide: Automating OS Patching on AWS
 :notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
 _A guide to creating a job template with a survey to perform OS patching on EC2 instances._
