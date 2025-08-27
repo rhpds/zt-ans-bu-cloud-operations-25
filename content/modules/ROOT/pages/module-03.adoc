@@ -1,37 +1,63 @@
 = Lab Guide: Deploying Applications with Ansible
-:toc:
+:notoc:
 :toc-title: Table of Contents
-:sectnums:
 :icons: font
 
-This guide demonstrates how to deploy applications to multiple hosts using an Ansible Automation Platform job template.
-
-*Estimated time to complete: 15 minutes*
+_A guide to deploying applications to Linux hosts using a job template and verifying the installation with ad-hoc commands._
 
 ---
 
-== Lab Overview
+== Lab Briefing
 
-Welcome to the final challenge. In this lab, you will use a Job Template to deploy applications to your Linux hosts and then verify the installation using an ad-hoc command.
+This section provides an overview of the lab challenge and instructions for getting started.
 
-First, log in to the Ansible Automation Platform UI with the following credentials.
+=== Challenge Summary
 
-.Login Credentials
+In this challenge, you'll deploy applications to your Linux hosts using a pre-created Job Template named `Deploy Application`.
+
+After launching the template, you will monitor its progress. Finally, you will use Ansible Automation Platform's **ad-hoc command** capability to verify that the application was installed correctly. This built-in functionality allows operations teams to get value right away without needing to write a full Ansible Playbook.
+
+=== Infrastructure Use Cases
+
+Ansible can automate many hybrid cloud tasks, as well as your on-premises Linux and Windows infrastructure. Red Hat refers to this as `infrastructure automation`.
+
+image::../assets/use-caes-infra.png[Diagram showing infrastructure automation use cases, opts="border"]
+
+The use case you are focusing on in this lab is **application deployment**.
+
+=== Getting Started
+
+That is the end of your challenge briefing! Please click the green **Start** button in the bottom right corner of this window if the lab has not already started.
+
+image:https://github.com/IPvSean/pictures_for_github/blob/master/start_button.png?raw=true[Start Button, 100, opts="border"]
+
+---
+
+== Lab Guide: Hands-On Tasks
+
+*Estimated time to complete: 15 minutes*
+
+Your assignment is to deploy applications using the Ansible Automation Platform.
+
+=== Task 1: Deploy Applications with a Job Template
+
+In this task, you will launch a pre-configured job template and use a survey to specify which applications to deploy and on which hosts.
+
+. **Navigate to the Automation Controller UI.**
++
+Click on the **Automation Controller** tab at the top of your lab window.
+
+. **Log in with the provided credentials.**
++
 [cols="1,2a"]
 |===
 | Username | `admin`
 | Password | `ansible123!`
 |===
 
----
-
-== Task 1: Deploy Applications with a Job Template
-
-In this task, you will launch a pre-configured job template and use a survey to specify which applications to deploy and on which hosts.
-
 . **Navigate to the Templates page.**
 +
-From the left navigation menu, select *Templates*.
+In the left navigation menu, go to **Automation Execution** → **Templates**.
 
 . **Launch the "Deploy Application" job template.**
 +
@@ -55,15 +81,13 @@ On the *Review* screen, observe the job details and the extra variables generate
 +
 The job will take a few moments to complete. The output will confirm which applications were installed on each host.
 
----
-
-== Task 2: Verify Installation with an Ad-Hoc Command
+=== Task 2: Verify Installation with an Ad-Hoc Command
 
 Now, you will run an ad-hoc command to confirm that the `nginx` service was installed and is running on both hosts.
 
 . **Navigate to your inventory hosts.**
 +
-In the left navigation menu, go to *Infrastructure* → *Inventories*, click on `AWS Inventory`, and then select the *Hosts* tab.
+In the left navigation menu, go to **Automation Execution** → **Infrastructure** → **Inventories**, click on `AWS Inventory`, and then select the **Hosts** tab.
 
 . **Select hosts and run a command.**
 +
@@ -91,9 +115,7 @@ The job will complete in a few moments. The output will list both hosts and prov
 
 == Conclusion
 
-Thank you for taking the time to learn about automating cloud operations tasks in AWS using the Red Hat Ansible Automation Platform!
-
-In this lab, you have seen how automation can be used to deploy applications and how ad-hoc commands can be used to perform quick checks on target hosts. These same principles can be easily applied to other cloud environments and a wide variety of operational tasks.
+Thank you for taking the time to learn about automating cloud operations tasks in AWS using the Red Hat Ansible Automation Platform! In this lab, you have seen how automation can be used to deploy applications and how ad-hoc commands can perform quick checks on target hosts. These same principles can be easily applied to other cloud environments.
 
 == Troubleshooting
 
