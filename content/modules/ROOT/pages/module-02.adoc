@@ -1,43 +1,64 @@
 = Lab Guide: Automating OS Patching on AWS
-:toc:
+:notoc:
 :toc-title: Table of Contents
 :sectnums:
 :icons: font
 
-This guide demonstrates how to create and run a job template to perform OS patching on EC2 instances.
-
-*Estimated time to complete: 15 minutes*
+_A guide to creating a job template with a survey to perform OS patching on EC2 instances._
 
 ---
 
-== Lab Overview
+== Lab Briefing
 
-Welcome to the lab on Cloud Operations. In this challenge, you will create a Job Template to automate the patching of Red Hat Enterprise Linux servers running on AWS. You will also generate and view a patching report.
+This section provides an overview of the lab challenge and instructions for getting started.
 
-First, log in to the Ansible Automation Platform UI with the following credentials.
+=== Challenge Summary
 
-.Login Credentials
+In this challenge, you'll perform OS patching on a Red Hat Enterprise Linux virtual machine running in AWS.
+
+You will also use a **Survey**. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_execution/controller-job-templates#controller-surveys-in-job-templates[Surveys] set extra variables for a playbook in a user-friendly, question-and-answer format, making your automation more interactive and flexible.
+
+image::../assets/survey_example.png[Example of a survey prompt in automation controller, opts="border"]
+
+=== Getting Started
+
+That is the end of your challenge briefing! Please click the green **Start** button in the bottom right corner of this window if the lab has not already started.
+
+image:https://github.com/IPvSean/pictures_for_github/blob/master/start_button.png?raw=true[Start Button, 100, opts="border"]
+
+---
+
+== Lab Guide: Hands-On Tasks
+
+*Estimated time to complete: 15 minutes*
+
+Your assignment is to create a Job Template to perform OS patching on EC2 instances. In this example, you will patch a Red Hat Enterprise Linux server and generate a viewable report.
+
+=== Task 1: Create and Run the Patching Job Template
+
+You will start by creating a job template, adding a survey to make it interactive, and then running it to check for available patches on the Linux host.
+
+. **Navigate to the Automation Controller UI.**
++
+Click on the **Automation Controller** tab at the top of your lab window.
+
+. **Log in with the provided credentials.**
++
 [cols="1,2a"]
 |===
 | Username | `admin`
 | Password | `ansible123!`
 |===
 
----
-
-== Task 1: Create and Run the Patching Job Template
-
-In this task, you will configure and launch a job template that checks for available patches on a Linux host.
-
 . **Navigate to the Templates page.**
 +
-From the left navigation menu, select *Templates*.
+In the left navigation menu, go to **Automation Execution** → **Templates**.
 
 . **Initiate the creation of a new job template.**
 +
 Click the **Create template** button, then select **Create job template**.
 +
-image::https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[Create a new job template, 600, opts="border"]
+image:https://github.com/HichamMourad/awsops25/blob/master/images/create_templates.png?raw=true[Create a new job template, 600, opts="border"]
 
 . **Enter the job template details.**
 +
@@ -61,17 +82,9 @@ TIP: To select the credential, you may need to first filter the *Credential Type
 +
 Scroll to the bottom and click the blue **Save** button.
 
-. **Navigate to the Survey tab.**
+. **Add a survey question.**
 +
-At the top of the template's details page, click the **Survey** tab to add a user prompt.
-
-. **Create a new survey question.**
-+
-Click the blue **Add** button.
-
-. **Configure the survey question.**
-+
-Fill out the survey form with the following values:
+Navigate to the **Survey** tab and click the **Create survey question** button. Configure the question as follows:
 +
 [cols="1,1"]
 |===
@@ -82,16 +95,14 @@ Fill out the survey form with the following values:
 | Required | Check the box ☑️
 | Multiple Choice Options | `rhel1`
 |===
-
-. **Set the default answer and save.**
 +
-Click the radio button next to `rhel1` to make it the default option, then click **Save**.
+Click the radio button next to `rhel1` to make it the default option, then click **Create survey question**.
 
 . **Enable the survey.**
 +
 You must **enable the survey** by clicking the toggle switch at the top of the survey page. The text will change from `SURVEY OFF` to `SURVEY ON`.
 +
-image::https://github.com/HichamMourad/awsops25/blob/master/images/survey_toggle_short.png?raw=true[Enable Survey Toggle, 600, opts="border"]
+image:https://github.com/HichamMourad/awsops25/blob/master/images/survey_toggle_short.png?raw=true[Enable Survey Toggle, 600, opts="border"]
 
 . **Launch the template.**
 +
@@ -101,11 +112,9 @@ Click the **Launch** button in the top right.
 +
 You will be prompted with the survey question. Since `rhel1` is already the default, click **Next**, review the details, and then click **Finish** to run the job.
 
-NOTE: We set the *Job Type* to `Check`. This runs the playbook in "dry run" mode, showing what changes would be made without actually applying them. The job output will point to the patch reports, which we will examine in the next task.
+NOTE: We set the *Job Type* to `Check`. This runs the playbook in "dry run" mode, showing what changes would be made without actually applying them. The job output will point to the patch reports, which you will examine in the next task.
 
----
-
-== Task 2: View the Patching Report
+=== Task 2: View the Patching Report
 
 The automation job generates HTML reports detailing the available patches.
 
@@ -126,4 +135,4 @@ NOTE: While this challenge focuses on Linux, Ansible Automation Platform can be 
 
 == Next Steps
 
-You have successfully completed this lab. Press the `Next` button in the lab environment to proceed to the next challenge.
+You have successfully completed this lab. Press the `Next` button in your lab environment to proceed to the next challenge.
