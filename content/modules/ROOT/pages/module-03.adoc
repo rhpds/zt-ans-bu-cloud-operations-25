@@ -21,7 +21,7 @@ After launching the template, you will monitor its progress. Finally, you will u
 
 Ansible can automate many hybrid cloud tasks, as well as your on-premises Linux and Windows infrastructure. Red Hat refers to this as `infrastructure automation`.
 
-image::../assets/use-caes-infra.png[Diagram showing infrastructure automation use cases, opts="border"]
+image::../assets/images/use-caes-infra.png[Diagram showing infrastructure automation use cases, opts="border"]
 
 The use case you are focusing on in this lab is **application deployment**.
 
