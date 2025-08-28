@@ -152,48 +152,6 @@ tee /tmp/aws_setup.yml << EOF
         - { playbook: 'playbooks/aws_resources.yml', name: 'Create AWS Resources' }
         - { playbook: 'playbooks/aws_instances.yml', name: 'Create AWS Instances' }
         
-    - name: Create job templates
-      ansible.controller.job_template:
-        name: "Deploy Application"
-        job_type: "run"
-        organization: "Default"
-        inventory: "AWS Inventory"
-        project: "AWS Demos Project"
-        playbook: "playbooks/lab2-deploy-application.yml"
-        credentials:
-          - "RHEL on AWS - SSH KEY"
-        survey_enabled: true
-        survey_spec:
-          name: Deploy the application SURVEY
-          description: Which applications do you want to install?
-          spec:
-          - type: multiselect
-            question_name: "Select the applications you would like to deploy (one or more)"
-            question_description: select the application
-            variable: application
-            required: true
-            default: httpd
-            choices:
-              - httpd
-              - nginx
-              - htop
-              - gdb
-          - type: multiselect
-            question_name: "Select the hosts you want to deploy the applications to (one or more)"
-            question_description: select the host
-            variable: HOSTS
-            required: true
-            default: rhel1
-            choices:
-              - rhel1
-              - rhel2
-        state: "present"
-        controller_username: "{{ username }}"
-        controller_password: "{{ admin_password }}"
-        controller_host: "https://{{ ansible_host }}"
-        validate_certs: false
-
-
     - name: Launch a job template
       ansible.controller.job_launch:
         job_template: "Create AWS Resources"
@@ -285,6 +243,48 @@ tee /tmp/aws_setup.yml << EOF
             ansible_user: rhel
             ansible_password: ansible123!
             ansible_host: controller
+
+    - name: Create job templates
+      ansible.controller.job_template:
+        name: "Deploy Application"
+        job_type: "run"
+        organization: "Default"
+        inventory: "AWS Inventory"
+        project: "AWS Demos Project"
+        playbook: "playbooks/lab2-deploy-application.yml"
+        credentials:
+          - "RHEL on AWS - SSH KEY"
+        survey_enabled: true
+        survey_spec:
+          name: Deploy the application SURVEY
+          description: Which applications do you want to install?
+          spec:
+          - type: multiselect
+            question_name: "Select the applications you would like to deploy (one or more)"
+            question_description: select the application
+            variable: application
+            required: true
+            default: httpd
+            choices:
+              - httpd
+              - nginx
+              - htop
+              - gdb
+          - type: multiselect
+            question_name: "Select the hosts you want to deploy the applications to (one or more)"
+            question_description: select the host
+            variable: HOSTS
+            required: true
+            default: rhel1
+            choices:
+              - rhel1
+              - rhel2
+        state: "present"
+        controller_username: "{{ username }}"
+        controller_password: "{{ admin_password }}"
+        controller_host: "https://{{ ansible_host }}"
+        validate_certs: false
+            
 
 EOF
 export ANSIBLE_LOCALHOST_WARNING=False
