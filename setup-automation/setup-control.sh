@@ -36,10 +36,15 @@ else
 fi
 
 ########
-## install python3 libraries needed for the Cloud Report
-dnf install -y python3-pip python3-libsemanage
+## Register with Satellite
+rm -rf /etc/yum.repos.d/*
+yum clean all
+subscription-manager clean
 
-# Create a playbook for the user to execute
+curl -k -L https://${SATELLITE_URL}/pub/katello-server-ca.crt -o /etc/pki/ca-trust/source/anchors/${SATELLITE_URL}.ca.crt
+update-ca-trust
+rpm -Uhv https://${SATELLITE_URL}/pub/katello-ca-consumer-latest.noarch.rpm
+subscription-manager register --org=${SATELLITE_ORG} --activationkey=${SATELLITE_ACTIVATIONKEY}
 
 ## install python3 libraries needed for the Cloud Report
 dnf install -y python3-pip python3-libsemanage
