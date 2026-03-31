@@ -153,6 +153,7 @@ tee /tmp/aws_setup.yml << EOF
         validate_certs: false
         extra_vars:
           controller_host: "{{ ansible_host }}"
+          ec2_region: "{{ aws_default_region }}"
       with_items:
         - { playbook: 'playbooks/aws_resources.yml', name: 'Create AWS Resources' }
         - { playbook: 'playbooks/aws_instances.yml', name: 'Create AWS Instances' }
