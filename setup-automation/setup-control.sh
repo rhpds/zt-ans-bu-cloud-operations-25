@@ -219,6 +219,8 @@ tee /tmp/aws_setup.yml << EOF
             - 'tag:Name'
           compose: 
             ansible_host: public_ip_address
+          regions:
+            - us-east-2
         state: present
         controller_username: "{{ username }}"
         controller_password: "{{ admin_password }}"
