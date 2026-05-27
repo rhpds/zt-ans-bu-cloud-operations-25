@@ -47,7 +47,7 @@ rpm -Uhv https://${SATELLITE_URL}/pub/katello-ca-consumer-latest.noarch.rpm
 subscription-manager register --org=${SATELLITE_ORG} --activationkey=${SATELLITE_ACTIVATIONKEY}
 
 ## install python3 libraries needed for the Cloud Report
-dnf install -y python3-pip python3-libsemanage
+dnf install -y python3-pip python3-libsemanage httpd
 
 # Create a playbook for the user to execute
 tee /tmp/aws_setup.yml << EOF
