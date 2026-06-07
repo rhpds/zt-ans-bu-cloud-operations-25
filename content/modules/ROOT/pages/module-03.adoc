@@ -21,17 +21,8 @@ After launching the template, you will monitor its progress. Finally, you will u
 
 Ansible can automate many hybrid cloud tasks, as well as your on-premises Linux and Windows infrastructure. Red Hat refers to this as `infrastructure automation`.
 
-image::../assets/images/use-caes-infra.png[Diagram showing infrastructure automation use cases, opts="border"]
-
 The use case you are focusing on in this lab is **application deployment**.
 
-=== Getting Started
-
-That is the end of your challenge briefing! Please click the green **Start** button in the bottom right corner of this window if the lab has not already started.
-
-image:https://github.com/IPvSean/pictures_for_github/blob/master/start_button.png?raw=true[Start Button, 100, opts="border"]
-
----
 
 == Lab Guide: Hands-On Tasks
 
@@ -43,7 +34,7 @@ Your assignment is to deploy applications using the Ansible Automation Platform.
 
 In this task, you will launch a pre-configured job template and use a survey to specify which applications to deploy and on which hosts.
 
-. **Navigate to the Automation Controller UI.**
+. **Navigate to the Ansible Automation Platform UI.**
 +
 Click on the **Automation Controller** tab at the top of your lab window.
 

@@ -17,15 +17,6 @@ In this challenge, you'll perform OS patching on a Red Hat Enterprise Linux virt
 
 You will also use a **Survey**. link:https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/using_automation_execution/controller-job-templates#controller-surveys-in-job-templates[Surveys] set extra variables for a playbook in a user-friendly, question-and-answer format, making your automation more interactive and flexible.
 
-image::../assets/survey_example.png[Example of a survey prompt in automation controller, opts="border"]
-
-=== Getting Started
-
-That is the end of your challenge briefing! Please click the green **Start** button in the bottom right corner of this window if the lab has not already started.
-
-image:https://github.com/IPvSean/pictures_for_github/blob/master/start_button.png?raw=true[Start Button, 100, opts="border"]
-
----
 
 == Lab Guide: Hands-On Tasks
 
@@ -37,7 +28,7 @@ Your assignment is to create a Job Template to perform OS patching on EC2 instan
 
 You will start by creating a job template, adding a survey to make it interactive, and then running it to check for available patches on the Linux host.
 
-. **Navigate to the Automation Controller UI.**
+. **Navigate to the Ansible Automation Platform UI.**
 +
 Click on the **Automation Controller** tab at the top of your lab window.
 
@@ -79,7 +70,7 @@ TIP: To select the credential, you may need to first filter the *Credential Type
 
 . **Save the job template.**
 +
-Scroll to the bottom and click the blue **Save** button.
+Scroll to the bottom and click the blue **Create job template** button.
 
 . **Add a survey question.**
 +
@@ -105,7 +96,7 @@ image:https://github.com/HichamMourad/awsops25/blob/master/images/survey_toggle_
 
 . **Launch the template.**
 +
-Click the **Launch** button in the top right.
+Click the **Launch template** button in the top right.
 
 . **Complete the survey and run the job.**
 +

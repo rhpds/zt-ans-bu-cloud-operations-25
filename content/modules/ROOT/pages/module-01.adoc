@@ -13,11 +13,8 @@ This section provides an overview of the lab environment and key concepts in Ans
 
 === Lab Instructions
 
-Please click the green **Start** button on the bottom right corner to create the lab environment if it has not already started. To navigate through this briefing, click the white `>` arrow on the right.
 
-image:https://github.com/IPvSean/pictures_for_github/blob/master/start_button.png?raw=true[Start Button, 100, opts="border"]
-
-=== Automation controller
+=== Ansible Automation Platform - Automation controller
 
 The control plane for Ansible Automation Platform is the **automation controller**. It helps standardize how automation is deployed, initiated, delegated, and audited. You can manage inventory, launch and schedule workflows, track changes, and integrate reporting, all from a centralized user interface and RESTful API.
 
@@ -137,7 +134,7 @@ TIP: To select the `AWS_Credential`, you may need to first filter the *Credentia
 
 . **Save and launch the job template.**
 +
-Scroll to the bottom, click **Save**, and then **Launch** the template. Observe the output of the job run.
+Scroll to the bottom, click **Create job template**, and then **Launch template**. Observe the output of the job run.
 
 NOTE: In a highly dynamic environment, the AWS inventory can change often. It's important to trigger an inventory synchronization before running jobs that rely on that inventory. We will address this in the next task.
 
@@ -164,28 +161,28 @@ Click **Create workflow job template**. The Workflow Visualizer will open.
 
 . **Add the first node (Inventory Sync).**
 +
-Click the **Start** button. In the *Add Node* dialog, configure the first step:
+Click the **Add Step** button. In the *Add Step* dialog, configure the first step:
 +
 --
 a. **Node Type:** Select `Inventory Source Sync`.
 b. **Inventory Source:** Select `AWS Source`.
-c. Click **Next**, then **Save**.
+c. Click **Next**, **Next**, then **Finish**.
 --
 
 . **Add the second node (Job Template).**
 +
-Hover over the `AWS Source` node you just created, click the **+** icon, and select *Add node*. Configure it as follows:
+Hover over the `AWS Source` node you just created, click the **elipsis** icon, and select *Add Step and link*. Configure it as follows:
 +
 --
 a. **Run type:** Ensure `On Success` is selected.
 b. **Node Type:** This should default to `Job Template`.
 c. **Job Template:** Select `Retrieve EC2 information`.
-d. Click **Next**, then **Save**.
+d. Click **Next**, **Next**, then **Finish**.
 --
 
 . **Save and launch the workflow.**
 +
-In the top right corner of the Visualizer, click **Save**. Then, navigate back to the **Templates** page and launch the `WORKFLOW - Retrieve EC2 information` template.
+In the top left corner of the Visualizer, click **Save**. Then, navigate back to the **Templates** page and launch the `WORKFLOW - Retrieve EC2 information` template.
 
 This workflow ensures your inventory is always up-to-date before you attempt to gather information from it.
 
