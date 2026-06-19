@@ -36,7 +36,7 @@ In this task, you will launch a pre-configured job template and use a survey to 
 
 . **Navigate to the Ansible Automation Platform UI.**
 +
-Click on the **Automation Controller** tab at the top of your lab window.
+Click on the **Ansible Automation Platform** tab at the top of your lab window.
 
 . **Log in with the provided credentials.**
 +
@@ -59,8 +59,8 @@ Find the `Deploy Application` template in the list and click the **Launch** icon
 You will be prompted with a survey. Configure it as follows:
 +
 --
-a. In the first field, the default application is `httpd`. **Add `nginx`** to the list of applications to install.
-b. In the second field for hosts, the default is `rhel1`. **Add `rhel2`** to also install the applications on the second host.
+a. In the first field, the default application is `httpd`. Add **`nginx`** to the list of applications to install.
+b. In the second field for hosts, the default is `rhel1`. Add **`rhel2`** to also install the applications on the second host.
 c. Click **Next**.
 --
 
@@ -100,7 +100,7 @@ On the *Review* screen, click **Finish**.
 
 . **Observe the output.**
 +
-The job will complete in a few moments. The output will list both hosts and provide details about the `nginx` service, confirming its status.
+The job will be completed in a few moments. The output will list both hosts and provide details about the `nginx` service, confirming its status.
 
 ---
 

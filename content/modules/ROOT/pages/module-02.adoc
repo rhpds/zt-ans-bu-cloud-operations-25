@@ -30,7 +30,7 @@ You will start by creating a job template, adding a survey to make it interactiv
 
 . **Navigate to the Ansible Automation Platform UI.**
 +
-Click on the **Automation Controller** tab at the top of your lab window.
+Click on the **Ansible Automation Platform** tab at the top of your lab window.
 
 . **Log in with the provided credentials.**
 +
@@ -90,7 +90,7 @@ Click the radio button next to `rhel1` to make it the default option, then click
 
 . **Enable the survey.**
 +
-You must **enable the survey** by clicking the toggle switch at the top of the survey page. The text will change from `SURVEY OFF` to `SURVEY ON`.
+You must **enable the survey** by clicking the toggle switch at the top of the survey page. The text will change from `Survey Disabled` to `Survey Enabled`.
 +
 image:https://github.com/HichamMourad/awsops25/blob/master/images/survey_toggle_short.png?raw=true[Enable Survey Toggle, 600, opts="border"]
 

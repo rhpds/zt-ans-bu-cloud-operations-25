@@ -59,9 +59,9 @@ Welcome to the `Ansible Hybrid Cloud Automation - Cloud Operations lab`. In this
 
 First, you will log in and examine the pre-configured credentials for this lab.
 
-. **Navigate to the Automation Controller UI.**
+. **Navigate to the Ansibel Automation Platform UI.**
 +
-Click on the **Automation Controller** tab at the top of your lab window.
+Click on the **Ansible Automation Platform** tab at the top of your lab window.
 
 . **Log in with the provided credentials.**
 +
@@ -96,7 +96,7 @@ Click on the inventory named `AWS Inventory`.
 
 . **Synchronize the inventory source.**
 +
-Select the **Sources** tab and click the **Sync** button (the icon with two circling arrows). This will update the host list from AWS.
+Select the **Sources** tab and click the **Launch Inventory** button (the rocket ship icon). This will update the host list from AWS.
 
 . **View the updated hosts.**
 +
@@ -131,6 +131,15 @@ Fill out the form with the following information:
 |===
 +
 TIP: To select the `AWS_Credential`, you may need to first filter the *Credential Type* to `Amazon Web Services`.
++
+Enter the following text to the *Extra Variables* text section.
++
+[source,yaml,role=execute]
+----
+---
+regions:
+  - us-east-2
+----
 
 . **Save and launch the job template.**
 +
@@ -166,18 +175,18 @@ Click the **Add Step** button. In the *Add Step* dialog, configure the first ste
 --
 a. **Node Type:** Select `Inventory Source Sync`.
 b. **Inventory Source:** Select `AWS Source`.
-c. Click **Next**, **Next**, then **Finish**.
+c. Click **Next**, then **Finish**.
 --
 
 . **Add the second node (Job Template).**
 +
-Hover over the `AWS Source` node you just created, click the **elipsis** icon, and select *Add Step and link*. Configure it as follows:
+Hover over the `AWS Source` node you just created, click the **ellipsis** icon, and select *Add Step and link*. Configure it as follows:
 +
 --
-a. **Run type:** Ensure `On Success` is selected.
+a. **Run type:** Ensure `Run On Success` is selected.
 b. **Node Type:** This should default to `Job Template`.
 c. **Job Template:** Select `Retrieve EC2 information`.
-d. Click **Next**, **Next**, then **Finish**.
+d. Click **Next**, then **Finish**.
 --
 
 . **Save and launch the workflow.**
